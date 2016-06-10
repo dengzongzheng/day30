@@ -48,7 +48,11 @@ export  default class extends Component{
             isMore:false,
             priceData:[],
             tagData:[],
-            param:param
+            param:param,
+            newHouseData:[],
+            newHousePageNo:1,
+            secondHouseData:[],
+            secondPageNo:1
 
         };
         this.tabChange = this.tabChange.bind(this);
@@ -59,11 +63,45 @@ export  default class extends Component{
         this.selectPrice = this.selectPrice.bind(this);
         this.selectMore = this.selectMore.bind(this);
         this.selectRoom = this.selectRoom.bind(this);
+        this.getNewHouses = this.getNewHouses.bind(this);
+        this.getSecondHouses =  this.getSecondHouses.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
        this.getBasicCondition();
+       this.getNewHouses();
+       this.getSecondHouses();
     }
+
+    getNewHouses(){
+        const pageNo = this.state.newHousePageNo;
+        var url = Util.api+"newHouse/getHouses/?";
+        url += "pageNo="+pageNo;
+        url += "&pageSize=10";
+        url += "&cityId=10002";
+        fetch(url).then((response)=>response.json()).then((responseData)=>{
+            console.log(responseData);
+            var data = this.state.newHouseData.concat(responseData.data);
+            this.setState({
+                newHousePageNo:pageNo+1,
+                newHouseData:data
+            });
+        })
+    }
+    getSecondHouses(){
+        const pageNo = this.state.secondPageNo;
+        var url = Util.api + "secondHouse/getHouses?";
+        url += "pageSize=10&cityId=10002&pageNo="+pageNo;
+        fetch(url).then((response)=>response.json()).then((responseData)=>{
+
+            var data = this.state.secondHouseData.concat(responseData.data);
+            this.setState({
+                secondHouseData:data,
+                secondPageNo:pageNo+1
+            });
+        })
+    }
+
 
     getBasicCondition(){
         var url = Util.api+"/basicCondition/getNewHouseCondition?cityId=10002";
@@ -163,7 +201,7 @@ export  default class extends Component{
                 <View style={[styles.houseContainer]}>
                     <Header currentTab={this.state._currentTab} tabChange={this.tabChange} goBack={this.goBack} />
                     <NewCondition selectMenu={this.selectMenu}/>
-                    <NewHouse goNewHouseDetail={this.goNewHouseDetail}/>
+                    <NewHouse goNewHouseDetail={this.goNewHouseDetail} getNewHouses={this.getNewHouses} newHouseData={this.state.newHouseData}/>
                     {
                         this.state.isPrice ?
                             <Price priceData={this.state.priceData} selectPrice={this.selectPrice} closeMenu={this.closeMenu}/>
@@ -186,7 +224,7 @@ export  default class extends Component{
                 <View style={[styles.houseContainer]}>
                     <Header currentTab={this.state._currentTab} tabChange={this.tabChange} goBack={this.goBack}/>
                     <SecondCondition/>
-                    <SecondHouse/>
+                    <SecondHouse getSecondHouses={this.getSecondHouses} secondHouseData={this.state.secondHouseData}/>
                 </View>
             )
         }else if(this.state._currentTab=="rent"){

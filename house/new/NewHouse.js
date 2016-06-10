@@ -25,39 +25,15 @@ export default class extends Component{
         // 初始状态
         const dataSource = new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!=r2});
         this.state = {
-            isPrice:false,
-            newHouseData:[],
-            dataSource:dataSource,
-            pageNo:1
+            dataSource:dataSource
         };
         this.renderRow = this.renderRow.bind(this);
-        this.getHouses = this.getHouses.bind(this);
     }
 
-    componentDidMount() {
-        if(this.state.newHouseData.length==0){
-            this.getHouses();
-        }
+    NewHouse() {
+
+       return this.props.newHouseData;
     }
-
-    getHouses(){
-        const pageNo = this.state.pageNo;
-        var url = Util.api+"newHouse/getHouses/?";
-        url += "pageNo="+pageNo;
-        url += "&pageSize=10";
-        url += "&cityId=10002";
-        fetch(url).then((response)=>response.json()).then((responseData)=>{
-            console.log(responseData);
-            var data = this.state.newHouseData.concat(responseData.data);
-            this.setState({
-                pageNo:pageNo+1,
-                dataSource:this.state.dataSource.cloneWithRows(data),
-                newHouseData:data
-            });
-        })
-    }
-
-
 
     renderRow(renderData){
        var tags = [];
@@ -97,12 +73,13 @@ export default class extends Component{
     render(){
         return(
                 <ListView
-                    dataSource={this.state.dataSource}
+                    dataSource={this.state.dataSource.cloneWithRows(this.props.newHouseData)}
                     renderRow={this.renderRow}
                     initialListSize={10}
                     pageSize={10}
                     onEndReachedThreshold={1}
-                    onEndReached={this.getHouses}
+                    onEndReached={()=>this.props.getNewHouses()}
+                    enableEmptySections = {true}
                 />
         );
 

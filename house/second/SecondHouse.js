@@ -24,31 +24,11 @@ export default class extends Component{
         // 初始状态
         var dataSource = new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!=r2});
         this.state = {
-            secondHouseData:[],
             dataSource:dataSource,
-            pageNo:1
         };
-        this.getHouses = this.getHouses.bind(this);
     }
 
-    componentDidMount() {
-        this.getHouses();
-    }
 
-    getHouses(){
-        const pageNo = this.state.pageNo;
-        var url = Util.api + "secondHouse/getHouses?";
-        url += "pageSize=10&cityId=10002&pageNo="+pageNo;
-        fetch(url).then((response)=>response.json()).then((responseData)=>{
-
-            var data = this.state.secondHouseData.concat(responseData.data);
-            this.setState({
-               secondHouseData:data,
-               dataSource:this.state.dataSource.cloneWithRows(data),
-               pageNo:pageNo+1
-            });
-        })
-    }
 
     renderRow (renderData){
         var tags = [];
@@ -65,7 +45,7 @@ export default class extends Component{
             <TouchableHighlight >
                 <View style={[styles.houseContainer]}>
                     <View style={[styles.imageContainer]}>
-                        <Image source={{uri:Util.tfsServer+renderData.realImg}} style={[styles.houseImage]}></Image>
+                        <Image source={{uri:Util.tfsServer+renderData.realImg}} style={[styles.houseImage]}/>
                     </View>
                     <View style={[styles.contentContainer]}>
                         <View style={[styles.flex_row]}>
@@ -95,9 +75,9 @@ export default class extends Component{
     render(){
         return (
             <ListView
-                dataSource={this.state.dataSource}
+                dataSource={this.state.dataSource.cloneWithRows(this.props.secondHouseData)}
                 renderRow={this.renderRow}
-                onEndReached={this.getHouses}
+                onEndReached={()=>this.props.getSecondHouses()}
                 onEndReachedThreshold={1}
             >
             </ListView>
