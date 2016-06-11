@@ -212,7 +212,9 @@ class MainViews extends Component {
       var that = this;
       var boxs = this.state.days.map(function (elem,index) {
           return (
-              <TouchableHighlight key={elem.key} onPress={()=>{that._jumpTo(index)}} style={[styles.touchBox,(index+1)%3==0?styles.touchBox2:styles.touchBox1]}>
+              <TouchableHighlight key={elem.key} onPress={()=>{that._jumpTo(index)}}
+                                  style={[styles.touchBox,(index+1)%3==0?styles.touchBox2:styles.touchBox1]}
+                                  underlayColor="#eee">
                   <View style={[styles.boxContainer]}>
                       <Text>{elem.title}</Text>
                   </View>

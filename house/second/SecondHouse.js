@@ -24,8 +24,9 @@ export default class extends Component{
         // 初始状态
         var dataSource = new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!=r2});
         this.state = {
-            dataSource:dataSource,
+            dataSource:dataSource
         };
+        this.renderRow = this.renderRow.bind(this);
     }
 
 
@@ -42,7 +43,7 @@ export default class extends Component{
             tags.push(tag);
         }
         return (
-            <TouchableHighlight >
+            <TouchableHighlight onPress={()=>this.props.goSecondHouseDetail()} underlayColor="#eee">
                 <View style={[styles.houseContainer]}>
                     <View style={[styles.imageContainer]}>
                         <Image source={{uri:Util.tfsServer+renderData.realImg}} style={[styles.houseImage]}/>

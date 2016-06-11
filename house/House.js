@@ -15,11 +15,13 @@ import Util from '../view/utils'
 import Header from '../house/Header'
 import NewHouse from '../house/new/NewHouse'
 import NewCondition from '../house/new/Condition'
+import NewHouseDetail from '../house/new/HouseDetail'
 import SecondHouse from '../house/second/SecondHouse'
 import SecondCondition from '../house/second/Condition'
+import SecondHouseDetail from '../house/second/HouseDetail'
 import RentHouse from '../house/rent/RentHouse'
 import RentCondition from '../house/rent/Condition'
-import NewHouseDetail from '../house/new/HouseDetail'
+
 import Price from '../house/new/Price'
 import Room from '../house/new/Room'
 import More from '../house/new/More'
@@ -67,6 +69,7 @@ export  default class extends Component{
         this.selectRoom = this.selectRoom.bind(this);
         this.getNewHouses = this.getNewHouses.bind(this);
         this.getSecondHouses =  this.getSecondHouses.bind(this);
+        this.goSecondHouseDetail = this.goSecondHouseDetail.bind(this);
     }
 
     componentWillMount() {
@@ -74,7 +77,31 @@ export  default class extends Component{
        this.getNewHouses();
        this.getSecondHouses();
     }
+    tabChange(currentTab){
+        var _currentTab = 'new';
+        console.log(currentTab);
+        if(currentTab=="二手房"){
+            _currentTab = "second";
+        }else if(currentTab=="租房"){
+            _currentTab = "rent";
+        }
+        this.setState({
+            _currentTab:_currentTab
+        });
+    }
+    goBack(){
+        this.props.navigator.pop();
+    }
 
+    getBasicCondition(){
+        var url = Util.api+"/basicCondition/getNewHouseCondition?cityId=10002";
+        fetch(url).then((response)=>response.json()).then((responseData)=>{
+            this.setState({
+                priceData:responseData.prices.data,
+                tagData:responseData.tags.data
+            })
+        });
+    }
     getParam(){
         var param = '';
         param +="cityId="+this.state.newHouseParam.cityId;
@@ -108,6 +135,13 @@ export  default class extends Component{
             });
         })
     }
+    goNewHouseDetail(){
+
+        this.props.navigator.push({
+            component:NewHouseDetail,
+            title:'新房详情'
+        })
+    }
     getSecondHouses(){
         const pageNo = this.state.newHousePageNo;
         var url = Util.api + "secondHouse/getHouses?";
@@ -121,38 +155,11 @@ export  default class extends Component{
             });
         })
     }
-
-
-    getBasicCondition(){
-        var url = Util.api+"/basicCondition/getNewHouseCondition?cityId=10002";
-        fetch(url).then((response)=>response.json()).then((responseData)=>{
-            this.setState({
-                priceData:responseData.prices.data,
-                tagData:responseData.tags.data
-            })
-        });
-    }
-
-    tabChange(currentTab){
-        var _currentTab = 'new';
-        console.log(currentTab);
-        if(currentTab=="二手房"){
-            _currentTab = "second";
-        }else if(currentTab=="租房"){
-            _currentTab = "rent";
-        }
-        this.setState({
-            _currentTab:_currentTab
-        });
-    }
-    goBack(){
-        this.props.navigator.pop();
-    }
-    goNewHouseDetail(){
+    goSecondHouseDetail(){
 
         this.props.navigator.push({
-            component:NewHouseDetail,
-            title:'新房详情'
+            component:SecondHouseDetail,
+            title:'二手房详情'
         })
     }
     selectMenu(menu){
@@ -263,7 +270,7 @@ export  default class extends Component{
                 <View style={[styles.houseContainer]}>
                     <Header currentTab={this.state._currentTab} tabChange={this.tabChange} goBack={this.goBack}/>
                     <SecondCondition/>
-                    <SecondHouse getSecondHouses={this.getSecondHouses} secondHouseData={this.state.secondHouseData}/>
+                    <SecondHouse getSecondHouses={this.getSecondHouses} goSecondHouseDetail={this.goSecondHouseDetail} secondHouseData={this.state.secondHouseData}/>
                 </View>
             )
         }else if(this.state._currentTab=="rent"){

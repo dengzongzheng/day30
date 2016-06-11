@@ -39,10 +39,10 @@ export default class extends Component{
         }
         return(
             <TouchableHighlight style={styles.menu} onPress={()=>this.props.closeMenu()}>
-                <ScrollView >
+                <View >
                     <View style={[styles.menu_item]}><Text style={[styles.menu_text]}>不限</Text></View>
                     {prices}
-                </ScrollView>
+                </View>
             </TouchableHighlight>
         )
     }
