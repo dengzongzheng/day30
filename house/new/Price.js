@@ -28,10 +28,11 @@ export default class extends Component{
     render(){
         var prices = [];
         for(var i in this.props.priceData){
+            const _pric = this.props.priceData[i];
             var price = (
-                <TouchableHighlight key={this.props.priceData[i].text} onPress={()=>this.props.selectPrice()}>
+                <TouchableHighlight key={_pric.text} onPress={()=>this.props.selectPrice(_pric)}>
                     <View  style={[styles.menu_item]}><Text
-                        style={[styles.menu_text]}>{this.props.priceData[i].text}</Text></View>
+                        style={[styles.menu_text]}>{_pric.text}</Text></View>
                 </TouchableHighlight>
             );
             prices.push(price);

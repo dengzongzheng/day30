@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     tab: {
         flex: 1,
         flexDirection: 'row',
-        height: 20,
+        height: 25,
         borderColor: '#eee',
         borderWidth: Util.pixel
     },

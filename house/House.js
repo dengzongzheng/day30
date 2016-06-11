@@ -37,6 +37,7 @@ export  default class extends Component{
 
         var param = {};
         param["cityId"]=10002;
+        param["pageSize"]=10;
 
         // 初始状态
         this.state = {
@@ -48,9 +49,10 @@ export  default class extends Component{
             isMore:false,
             priceData:[],
             tagData:[],
-            param:param,
+            newHouseParam:param,
             newHouseData:[],
             newHousePageNo:1,
+            secondHouseParam:param,
             secondHouseData:[],
             secondPageNo:1
 
@@ -73,12 +75,30 @@ export  default class extends Component{
        this.getSecondHouses();
     }
 
+    getParam(){
+        var param = '';
+        param +="cityId="+this.state.newHouseParam.cityId;
+        param +="&pageSize="+this.state.newHouseParam.pageSize;
+        param +="&pageNo="+this.state.newHousePageNo;
+
+        if(this.state.newHouseParam.averagePriceStart){
+            param +="&averagePriceStart="+this.state.newHouseParam.averagePriceStart;
+        }
+        if(this.state.newHouseParam.averagePriceEnd){
+            param +="&averagePriceEnd="+this.state.newHouseParam.averagePriceEnd;
+        }
+        if(this.state.newHouseParam.room){
+            param +="&room="+this.state.newHouseParam.room;
+        }
+
+        return param;
+    }
+
     getNewHouses(){
         const pageNo = this.state.newHousePageNo;
         var url = Util.api+"newHouse/getHouses/?";
-        url += "pageNo="+pageNo;
-        url += "&pageSize=10";
-        url += "&cityId=10002";
+        url += this.getParam();
+        console.log(url);
         fetch(url).then((response)=>response.json()).then((responseData)=>{
             console.log(responseData);
             var data = this.state.newHouseData.concat(responseData.data);
@@ -89,7 +109,7 @@ export  default class extends Component{
         })
     }
     getSecondHouses(){
-        const pageNo = this.state.secondPageNo;
+        const pageNo = this.state.newHousePageNo;
         var url = Util.api + "secondHouse/getHouses?";
         url += "pageSize=10&cityId=10002&pageNo="+pageNo;
         fetch(url).then((response)=>response.json()).then((responseData)=>{
@@ -165,14 +185,22 @@ export  default class extends Component{
                 isMore:!this.state.isMore,
                 isPrice:false,
                 isArea:false,
-                isRoom:false,
+                isRoom:false
             });
         }
     }
 
-    selectPrice(startAmounts,endAmounts){
+    selectPrice(value){
         this.closeMenu();
-        alert('222');
+        const param = this.state.newHouseParam;
+        param["averagePriceStart"] = value.startAmounts;
+        param["averagePriceEnd"] = value.endAmounts;
+        this.setState({
+           newHouseParam:param,
+           newHousePageNo:1,
+           newHouseData:[]
+        });
+        this.getNewHouses();
     }
 
     selectMore(){
@@ -180,9 +208,20 @@ export  default class extends Component{
         alert("more");
     }
 
-    selectRoom(){
+    selectRoom(room){
         this.closeMenu();
-        alert("room");
+        const param = this.state.newHouseParam;
+        if(""==room&&param.room){
+            param.remove("room");
+        }else{
+            param['room']=room;
+        }
+        this.setState({
+            newHouseParam:param,
+            newHousePageNo:1,
+            newHouseData:[]
+        });
+        this.getNewHouses();
     }
 
     closeMenu(){

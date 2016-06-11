@@ -30,10 +30,13 @@ export default class extends Component{
         this.renderRow = this.renderRow.bind(this);
     }
 
-    NewHouse() {
+    NewHouse(){
 
-       return this.props.newHouseData;
+        this.setState({
+            dataSource:this.state.dataSource.cloneWithRows(this.props.newHouseData)
+        });
     }
+
 
     renderRow(renderData){
        var tags = [];
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         marginLeft:10,
         marginRight:10,
-        height:(Util.size.height-85)/4,
+        height:(Util.size.height-90)/4,
         borderBottomWidth:Util.pixel,
         borderBottomColor:'#eee'
     },

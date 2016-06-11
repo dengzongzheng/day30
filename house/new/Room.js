@@ -26,22 +26,22 @@ export default class extends Component{
                     <TouchableHighlight onPress={()=>this.props.selectRoom()}>
                         <View style={[styles.menu_item]}><Text style={[styles.menu_text]}>不限</Text></View>
                     </TouchableHighlight>
-                    <TouchableHighlight  onPress={()=>this.props.selectRoom()}>
+                    <TouchableHighlight  onPress={()=>this.props.selectRoom(1)}>
                         <View style={[styles.menu_item]}><Text style={[styles.menu_text]}>一室</Text></View>
                     </TouchableHighlight>
-                    <TouchableHighlight  onPress={()=>this.props.selectRoom()}>
+                    <TouchableHighlight  onPress={()=>this.props.selectRoom(2)}>
                         <View style={[styles.menu_item]}><Text style={[styles.menu_text]}>两室</Text></View>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={()=>this.props.selectRoom()}>
+                    <TouchableHighlight onPress={()=>this.props.selectRoom(3)}>
                         <View style={[styles.menu_item]}><Text style={[styles.menu_text]}>三室</Text></View>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={()=>this.props.selectRoom()}>
+                    <TouchableHighlight onPress={()=>this.props.selectRoom(4)}>
                         <View style={[styles.menu_item]}><Text style={[styles.menu_text]}>四室</Text></View>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={()=>this.props.selectRoom()}>
+                    <TouchableHighlight onPress={()=>this.props.selectRoom(5)}>
                         <View style={[styles.menu_item]}><Text style={[styles.menu_text]}>五室</Text></View>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={()=>this.props.selectRoom()}>
+                    <TouchableHighlight onPress={()=>this.props.selectRoom(6)}>
                         <View style={[styles.menu_item]}><Text style={[styles.menu_text]}>五室以上</Text></View>
                     </TouchableHighlight>
                 </ScrollView>
