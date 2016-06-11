@@ -50,7 +50,9 @@ export default class extends Component{
                     </View>
                     <View style={[styles.contentContainer]}>
                         <View style={[styles.flex_row]}>
-                            <Text numberOfLines={1}>{renderData.title}</Text>
+                            <View style={{flex:0.8,flexWrap:'nowrap',alignItems:'flex-start'}}>
+                                <Text numberOfLines={1}>{renderData.title}</Text>
+                            </View>
                         </View>
                         <View style={[styles.flex_row]}>
                             <View style={[styles.flex_row,{flex:1.5}]}>
@@ -80,6 +82,7 @@ export default class extends Component{
                 renderRow={this.renderRow}
                 onEndReached={()=>this.props.getSecondHouses()}
                 onEndReachedThreshold={1}
+                enableEmptySections = {true}
             >
             </ListView>
         );

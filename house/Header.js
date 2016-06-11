@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
         marginRight:5,
         marginBottom:5,
         borderBottomWidth:Util.pixel,
-        borderBottomColor:'#eee',
+        borderBottomColor:'black',
         flex:1,
         flexDirection:'row'
     },

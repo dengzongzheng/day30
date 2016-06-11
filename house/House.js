@@ -21,7 +21,7 @@ import SecondCondition from '../house/second/Condition'
 import SecondHouseDetail from '../house/second/HouseDetail'
 import RentHouse from '../house/rent/RentHouse'
 import RentCondition from '../house/rent/Condition'
-
+import RentHouseDetail from '../house/rent/HouseDetail'
 import Price from '../house/new/Price'
 import Room from '../house/new/Room'
 import More from '../house/new/More'
@@ -56,38 +56,63 @@ export  default class extends Component{
             newHousePageNo:1,
             secondHouseParam:param,
             secondHouseData:[],
-            secondPageNo:1
+            secondPageNo:1,
+            rentHouseParam:param,
+            rentHouseData:[],
+            rentPageNo:1
 
         };
         this.tabChange = this.tabChange.bind(this);
         this.goBack = this.goBack.bind(this);
-        this.goNewHouseDetail = this.goNewHouseDetail.bind(this);
         this.selectMenu = this.selectMenu.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
         this.selectPrice = this.selectPrice.bind(this);
         this.selectMore = this.selectMore.bind(this);
         this.selectRoom = this.selectRoom.bind(this);
         this.getNewHouses = this.getNewHouses.bind(this);
+        this.goNewHouseDetail = this.goNewHouseDetail.bind(this);
         this.getSecondHouses =  this.getSecondHouses.bind(this);
         this.goSecondHouseDetail = this.goSecondHouseDetail.bind(this);
+        this.getRentHouses =  this.getRentHouses.bind(this);
+        this.goRentHouseDetail = this.goRentHouseDetail.bind(this);
+    }
+
+    componentDidMount() {
+        this.getBasicCondition();
     }
 
     componentWillMount() {
-       this.getBasicCondition();
        this.getNewHouses();
-       this.getSecondHouses();
     }
     tabChange(currentTab){
         var _currentTab = 'new';
-        console.log(currentTab);
         if(currentTab=="二手房"){
             _currentTab = "second";
+            if(this.state.secondHouseData.length==0){
+                this.getSecondHouses();
+            }
+            this.setState({
+                _currentTab:_currentTab
+            });
         }else if(currentTab=="租房"){
             _currentTab = "rent";
+            console.log(this.state.rentHouseData.length);
+            if(this.state.rentHouseData.length==0){
+                this.getRentHouses();
+            }
+            this.setState({
+                _currentTab:_currentTab
+            });
+        }else if(currentTab=="新房"){
+            _currentTab = "new";
+            console.log(this.state.newHouseData.length);
+            if(this.state.newHouseData.length==0){
+                this.getNewHouses();
+            }
+            this.setState({
+                _currentTab:_currentTab
+            });
         }
-        this.setState({
-            _currentTab:_currentTab
-        });
     }
     goBack(){
         this.props.navigator.pop();
@@ -160,6 +185,26 @@ export  default class extends Component{
         this.props.navigator.push({
             component:SecondHouseDetail,
             title:'二手房详情'
+        })
+    }
+    getRentHouses(){
+        const pageNo = this.state.rentPageNo;
+        var url = Util.api + "rentHouse/getHouses?";
+        url += "pageSize=10&cityId=10002&pageNo="+pageNo;
+        fetch(url).then((response)=>response.json()).then((responseData)=>{
+
+            var data = this.state.rentHouseData.concat(responseData.data);
+            this.setState({
+                rentHouseData:data,
+                rentPageNo:pageNo+1
+            });
+        })
+    }
+    goRentHouseDetail(){
+
+        this.props.navigator.push({
+            component:RentHouseDetail,
+            title:'租房详情'
         })
     }
     selectMenu(menu){
@@ -278,7 +323,7 @@ export  default class extends Component{
                 <View style={[styles.houseContainer]}>
                     <Header currentTab={this.state._currentTab} tabChange={this.tabChange} goBack={this.goBack}/>
                     <RentCondition/>
-                    <RentHouse/>
+                    <RentHouse rentHouseData={this.state.rentHouseData} getRentHouses={this.getRentHouses} goRentHouseDetail={this.goRentHouseDetail}/>
                 </View>
             )
         }
